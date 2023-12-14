@@ -28,7 +28,7 @@ U_opt(:,end+1) = nan;
 ph = rocket.plotvis_sub(T_opt, X_opt, U_opt,sys_x, xs, us); 
 
 
-[T, X_sub, U_sub] = rocket.simulate_f(sys_x, x0, Tf, @mpc_x.get_u, 0); 
+[T, X_sub, U_sub] = rocket.simulate_f(sys_x, x, Tf, @mpc_x.get_u, 0); 
 ph2 = rocket.plotvis_sub(T, X_sub, U_sub, sys_x, xs, us);
 ph2.fig.Name = 'X.3.1';
 
@@ -40,7 +40,7 @@ U_opt(:,end+1) = nan;
 ph = rocket.plotvis_sub(T_opt, X_opt, U_opt,sys_y, xs, us); 
 
 
-[T, X_sub, U_sub] = rocket.simulate_f(sys_y, x0, Tf, @mpc_y.get_u, 0); 
+[T, X_sub, U_sub] = rocket.simulate_f(sys_y, y, Tf, @mpc_y.get_u, 0); 
 ph2 = rocket.plotvis_sub(T, X_sub, U_sub, sys_y, xs, us);
 ph2.fig.Name = 'Y.3.1';
 
@@ -52,7 +52,7 @@ U_opt(:,end+1) = nan;
 ph = rocket.plotvis_sub(T_opt, X_opt, U_opt,sys_z, xs, us); 
 
 
-[T, X_sub, U_sub] = rocket.simulate_f(sys_z, x0, Tf, @mpc_z.get_u, 0); 
+[T, X_sub, U_sub] = rocket.simulate_f(sys_z, z, Tf, @mpc_z.get_u, 0); 
 ph2 = rocket.plotvis_sub(T, X_sub, U_sub, sys_z, xs, us);
 ph2.fig.Name = 'Z.3.1';
 %% Design MPC roll controller
