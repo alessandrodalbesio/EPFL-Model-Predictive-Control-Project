@@ -2,8 +2,6 @@
 import gurobi.*;
 clc; close all; clear;
 addpath(fullfile('..', 'src'));
-addpath(fullfile('..', 'utils'));
-
 
 % Parameter choice
 H = 8; % Horizon length [seconds]
