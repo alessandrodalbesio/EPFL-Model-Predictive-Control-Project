@@ -52,7 +52,7 @@ classdef MpcControl_y < MpcControlBase
             K=-K;
             
             %compute the maximal invariant set
-            Xf=polytope([H;Hu*k],[h;hu]);
+            Xf=polytope([H;Hu*K],[h;hu]);
             Acl=[mpc.A+mpc.B*K];
             while 1
                 prevXf=Xf;
