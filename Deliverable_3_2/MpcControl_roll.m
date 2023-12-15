@@ -85,7 +85,7 @@ classdef MpcControl_roll < MpcControlBase
             K=-K;
             
             %compute the maximal invariant set
-            Xf=polytope([Hu*k],[hu]);
+            Xf=polytope([Hu*K],[hu]);
             Acl=[mpc.A+mpc.B*K];
             while 1
                 prevXf=Xf;
@@ -105,15 +105,16 @@ classdef MpcControl_roll < MpcControlBase
             plot(Xf,'r');
             xlabel('Roll angle speed'); ylabel('Roll angle');
 
-            con = (X(:,2) == mpc.A*X(:,1) + mpc.B*U(:,1)) + (Hu*U(:,1) <= hu);
-            obj = U(:,1)'*R*U(:,1);
+            con = (X(:,2)-x_ref == mpc.A*(X(:,1)-x_ref) + mpc.B*(U(:,1)-u_ref)) + (Hu*U(:,1) <= hu);
+            obj = (U(:,1)-u_ref)'*R*(U(:,1)-u_ref);
             for i = 2:N-1
-                con = con + (X(:,i+1) == mpc.A*X(:,i) + mpc.B*U(:,i));
+                con = con + (X(:,i+1)-x_ref == mpc.A*(X(:,i)-x_ref) + mpc.B*(U(:,i)-u_ref));
                 con = con + (Hu*U(:,i) <= hu);
-                obj = obj + X(:,i)'*Q*X(:,i) + U(:,i)'*R*U(:,i);
+                obj = obj + (X(:,i)-x_ref)'*Q*(X(:,i)-x_ref) + (U(:,i)-u_ref)'*R*(U(:,i)-u_ref);
             end
-            con = con + (Ff*X(:,N) <= ff);
-            obj = obj + X(:,N)'*Qf*X(:,N);  
+            con = con + (Ff*(X(:,N)-x_ref) <= ff);
+            obj = obj + (X(:,N)-x_ref)'*Qf*(X(:,N)-x_ref);  
+
 
             
             % Compute the steady-state target
