@@ -52,7 +52,7 @@ classdef MpcControl_y < MpcControlBase
             K=-K;
             
             %compute the maximal invariant set
-            Xf=polytope([H;Hu*k],[h;hu]);
+            Xf=polytope([H;Hu*K],[h;hu]);
             Acl=[mpc.A+mpc.B*K];
             while 1
                 prevXf=Xf;
@@ -65,35 +65,19 @@ classdef MpcControl_y < MpcControlBase
             end
             [Ff,ff]=double(Xf);
 
-            figure
-            subplot(2,2,1)
-            hold on; grid on;
-            P2=Xf.projection(1:2);
-            plot(P2,'g',struct('alpha',0.1));
-            xlabel('angle speed'); ylabel('angle');
+            
 
-            subplot(2,2,2)
-            hold on; grid on;
-            P2=Xf.projection(2:3);
-            plot(P2,'g',struct('alpha',0.1));
-            xlabel('angle'); ylabel('velocity');
-
-            subplot(2,2,3)
-            hold on; grid on;
-            P2=Xf.projection(3:4);
-            plot(P2,'g',struct('alpha',0.1));
-            xlabel('velocity'); ylabel('position');
-
-
-            con = (X(:,2) == mpc.A*X(:,1) + mpc.B*U(:,1)) + (Hu*U(:,1) <= hu);
-            obj = U(:,1)'*R*U(:,1);
+           con = (X(:,2)-x_ref == mpc.A*(X(:,1)-x_ref) + mpc.B*(U(:,1)-u_ref) + (Hu*(U(:,1)-u_ref)) <= hu);
+            obj = (U(:,1)-u_ref)'*R*(U(:,1)-u_ref);
             for i = 2:N-1
-                con = con + (X(:,i+1) == mpc.A*X(:,i) + mpc.B*U(:,i));
-                con = con + (H*X(:,i) <= h) + (Hu*U(:,i) <= hu);
-                obj = obj + X(:,i)'*Q*X(:,i) + U(:,i)'*R*U(:,i);
+                con = con + (X(:,i+1)-x_ref == mpc.A*(X(:,i)-x_ref) + mpc.B*(U(:,i)-u_ref));
+                con = con + (H*(X(:,i)-x_ref) <= h) + (Hu*(U(:,i)-u_ref)) <= hu);
+                obj = obj + (X(:,i)-x_ref)'*Q*(X(:,i)-x_ref) + (U(:,i)-u_ref)'*R*(U(:,i)-u_ref);
             end
             con = con + (Ff*X(:,N) <= ff);
-            obj = obj + X(:,N)'*Qf*X(:,N);  
+            obj = obj + (X(:,N)-x_ref)'*Qf*(X(:,N)-x_ref);  
+
+           
 
             
             
