@@ -7,7 +7,7 @@ addpath(fullfile('..', 'src'));
 H = 8; % Horizon length [seconds]
 Ts = 1/20; % Sample time [seconds]
 Tf = 20; % Close-loop simulation time [seconds]
-CLOSE_LOOP = true;
+closedLoop = false;
 
 % Define starting points
 x0 = [0;0;0;3]; % omega_y, beta, v_x, x
@@ -28,7 +28,7 @@ mpc_z = MpcControl_z(sys_z, Ts, H); % Controller for z state
 mpc_roll = MpcControl_roll(sys_roll, Ts, H); % Controller for roll state
 
 %% X state
-if CLOSE_LOOP
+if closedLoop
     [T, X, U] = rocket.simulate_f(sys_x, x0, Tf, @mpc_x.get_u, 0);
 else
     [~, T, X, U] = mpc_x.get_u(x0);
@@ -37,7 +37,7 @@ end
 rocket.plotvis_sub(T, X, U, sys_x, xs, us);  % Plot as usual
 
 %% Y state
-if CLOSE_LOOP
+if closedLoop
     [T, X, U] = rocket.simulate_f(sys_y, y0, Tf, @mpc_y.get_u, 0);
 else
     [~, T, X, U] = mpc_y.get_u(y0);
@@ -46,7 +46,7 @@ end
 rocket.plotvis_sub(T, X, U, sys_y, xs, us);  % Plot as usual
 
 %% Z state
-if CLOSE_LOOP
+if closedLoop
     [T, X, U] = rocket.simulate_f(sys_z, z0, Tf, @mpc_z.get_u, 0);
 else
     [~, T, X, U] = mpc_z.get_u(z0);
@@ -56,7 +56,7 @@ end
 rocket.plotvis_sub(T, X, U, sys_z, xs, us);  % Plot as usual
 
 %% Roll state
-if CLOSE_LOOP
+if closedLoop
     [T, X, U] = rocket.simulate_f(sys_roll, roll0, Tf, @mpc_roll.get_u, 0);
 else
     % Evaluate once and plot optimal open-loop trajectory

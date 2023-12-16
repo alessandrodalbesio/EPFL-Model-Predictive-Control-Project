@@ -1,9 +1,26 @@
 classdef MpcControl_x < MpcControlBase
-    
+    properties
+        % Define the title for the plots
+        title_plots="X controller";
+
+        % Define the cost parameters
+        Q = eye(4);
+        R = 0.1;
+
+        % Define the constraints matrices
+        F = [0,1,0,0;0,-1,0,0];
+        f = [0.1745;0.1745];
+        M = [1;-1];
+        m = [0.26;0.26];
+        Xmax = [Inf,0.1745,Inf,Inf];
+        Xmin = [-Inf,-0.1745,-Inf,-Inf];
+        Umax = 0.26;
+        Umin = -0.26;
+    end
     methods
         % Design a YALMIP optimizer object that takes a steady-state state
         % and input (xs, us) and returns a control input
-        function ctrl_opti = setup_controller(mpc, Ts, H, xs, us)
+        function ctrl_opti = setup_controller(mpc, Ts, H)
             
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % INPUTS
@@ -29,20 +46,7 @@ classdef MpcControl_x < MpcControlBase
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             
-            % Define the cost parameters
-            Q = eye(4);
-            R = 0.1;
-
-            % Define the constraints
-            F = [0,1,0,0;0,-1,0,0];
-            f = [0.1745;0.1745];
-            M = [1;-1];
-            m = [0.26;0.26];
-            Xmax = [Inf,0.1745,Inf,Inf];
-            Xmin = [-Inf,-0.1745,-Inf,-Inf];
-            Umax = 0.26;
-            Umin = -0.26;
-            [con,obj] = constraints(mpc,Q,R,N,X,U,F,f,M,m,Xmax,Xmin,Umax,Umin);
+            [con,obj] = constraints(mpc,X,U,N);
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

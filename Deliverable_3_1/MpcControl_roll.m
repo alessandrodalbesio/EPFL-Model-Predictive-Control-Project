@@ -1,5 +1,22 @@
 classdef MpcControl_roll < MpcControlBase
-    
+    properties
+        % Define the title for the plots
+        title_plots="Roll controller";
+
+        % Define the cost parameters
+        Q = eye(2);
+        R = 0.1;
+
+        % Define the constraints
+        F = nan;
+        f = nan;
+        M = [1;-1];
+        m = [20;20];
+        Xmax = [Inf,Inf];
+        Xmin = [-Inf,-Inf];
+        Umax = 20;
+        Umin = -20;
+    end
     methods
         % Design a YALMIP optimizer object that takes a steady-state state
         % and input (xs, us) and returns a control input
@@ -29,20 +46,7 @@ classdef MpcControl_roll < MpcControlBase
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             
-            % Define the cost parameters
-            Q = eye(2);
-            R = 0.1;
-
-            % Define the constraints
-            F = nan;
-            f = nan;
-            M = [1;-1];
-            m = [20;20];
-            Xmax = [Inf,Inf];
-            Xmin = [-Inf,-Inf];
-            Umax = 20;
-            Umin = -20;
-            [con,obj] = constraints(mpc,Q,R,N,X,U,F,f,M,m,Xmax,Xmin,Umax,Umin);
+            [con,obj] = constraints(mpc,X,U,N);
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -2,6 +2,23 @@ classdef MpcControl_z < MpcControlBase
     properties
         A_bar, B_bar, C_bar % Augmented system for disturbance rejection
         L                   % Estimator gain for disturbance rejection
+        
+        % Define the title for the plots
+        title_plots="Z controller";
+
+        % Define the cost parameters
+        Q = eye(2);
+        R = 0.1;
+
+        % Define the constraints
+        F = nan;
+        f = nan;
+        M = [-1;1];
+        m = [-50+56.667;80-56.667];
+        Xmax = [Inf,Inf];
+        Xmin = [-Inf,-Inf];
+        Umin = 50-56.667;
+        Umax = 80-56.667;
     end
     
     methods
@@ -43,21 +60,7 @@ classdef MpcControl_z < MpcControlBase
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             
-            % Define the cost parameters
-            Q = eye(2);
-            R = 0.1;
-
-            % Define the constraints
-            F = nan;
-            f = nan;
-            us = 56.666666540173570;
-            M = [-1;1];
-            m = [-50+us;80-us];
-            Xmax = [Inf,Inf];
-            Xmin = [-Inf,-Inf];
-            Umax = 50-us;
-            Umin = -80+us;
-            [con,obj] = constraints(mpc,Q,R,N,X,U,F,f,M,m,Xmax,Xmin,Umax,Umin);
+            [con,obj] = constraints(mpc,X,U,N);
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
