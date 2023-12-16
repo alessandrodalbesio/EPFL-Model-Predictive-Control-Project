@@ -1,7 +1,7 @@
 function [con,obj] = constraints(mpc,N,X,U,xref,uref)
     con = [];
     obj = 0;
-    % Set the constraints for t=1...N-1
+    % Set the constraints for t=1,...,N-1
     for i=1:N-1
         con = [con, (X(:,i+1)-xref) == mpc.A * (X(:,i)-xref) + mpc.B * (U(:,i)-uref)];
         if ~all(all(isnan(mpc.F))) && ~all(all(isnan(mpc.f))); con = [con,mpc.F*(X(:,i)-xref) <= mpc.f-mpc.F*xref]; end

@@ -4,7 +4,7 @@ classdef MpcControl_x < MpcControlBase
         Q = eye(4);
         R = 0.1;
 
-        % Define the constraints
+        % Define the constraints matrices
         F = [0,1,0,0;0,-1,0,0];
         f = [0.1745;0.1745];
         M = [1;-1];

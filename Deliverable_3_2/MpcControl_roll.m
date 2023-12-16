@@ -1,5 +1,6 @@
 classdef MpcControl_roll < MpcControlBase
     properties
+
         % Define the cost parameters
         Q = eye(2);
         R = 0.1;

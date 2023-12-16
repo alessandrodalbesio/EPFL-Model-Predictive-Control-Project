@@ -3,7 +3,7 @@ function [obj,con] = ss_constraints(mpc,xs,us,ref)
     Rs = 1;
     [ny, nx] = size(mpc.C);
     
-    % Define constraints and objective
+    % Define constraints and cost
     obj = us'*Rs*us;
     con = [eye(nx,nx) - mpc.A, -mpc.B ; mpc.C, 0]*[xs; us] == [zeros(nx,ny);ref];
     if ~all(all(isnan(mpc.F))) && ~all(all(isnan(mpc.f))); con = [con, mpc.F*xs <= mpc.f]; end
