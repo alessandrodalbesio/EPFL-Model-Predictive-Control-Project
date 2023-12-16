@@ -2,8 +2,8 @@ classdef MpcControl_x < MpcControlBase
     properties
         % Define the cost parameters
         Q = diag([1,1,1,1]);
-        R = 1;
-        S = diag([1,1,1,1]);
+        R = 0.1;
+        S = diag([1,1]);
         s = 1;
 
         % Define the constraints
@@ -44,11 +44,9 @@ classdef MpcControl_x < MpcControlBase
 
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
-            % Define the slack variables
-            eps = svpvar(nx,N);
 
             % Set the constraints and the objective
-            [con,obj] = constraints(mpc,N,X,U,eps,x_ref,u_ref);
+            [con,obj] = constraints(mpc,N,X,U,x_ref,u_ref);
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

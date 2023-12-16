@@ -7,8 +7,8 @@ clc; clear; close all;
 H = 10; % Horizon length [second]
 Ts = 1/20; % Sample time
 Tf = 30; % Simulation time
-SIM_ANIMATION_TIME = 10;
-CLOSE_LOOP = true;
+simAnimationTime = 10;
+closedLoop = true;
 x0 = zeros(12,1); %vector intial condition
 
 % Initialize the system
@@ -24,10 +24,10 @@ mpc_z = MpcControl_z(sys_z, Ts, H); % Controller for z state
 mpc_roll = MpcControl_roll(sys_roll, Ts, H); % Controller for roll state
 mpc = rocket.merge_lin_controllers(xs, us, mpc_x, mpc_y, mpc_z, mpc_roll);
 
-if CLOSE_LOOP
+if closedLoop
     ref = @(t_, x_) ref_TVC(t_); %ref is a trajectory
     [T, X, U, Ref] = rocket.simulate(x0, Tf, @mpc.get_u, ref);
-    rocket.anim_rate = SIM_ANIMATION_TIME; % Increase this to make the animation faster
+    rocket.anim_rate = simAnimationTime; % Increase this to make the animation faster
     ph = rocket.plotvis(T, X, U, Ref);
     ph.fig.Name = 'Merged lin. MPC in nonlinear simulation'; % Set a figure title
 else

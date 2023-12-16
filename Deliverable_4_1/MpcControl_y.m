@@ -3,7 +3,7 @@ classdef MpcControl_y < MpcControlBase
         % Define the cost parameters
         Q = diag([1,1,1,1]);
         R = 0.1;
-        S = diag([1,1,1,1]);
+        S = diag([1,1]);
         s = 1;
 
         % Define the constraints
@@ -11,6 +11,10 @@ classdef MpcControl_y < MpcControlBase
         f = [0.1745;0.1745];
         M = [1;-1];
         m = [0.26;0.26];
+        Xmax = [Inf,0.1745,Inf,Inf];
+        Xmin = [-Inf,-0.1745,-Inf,-Inf];
+        Umax = 0.26;
+        Umin = -0.26;
     end
     methods
         % Design a YALMIP optimizer object that takes a steady-state state
@@ -41,7 +45,6 @@ classdef MpcControl_y < MpcControlBase
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             
-
             [con,obj] = constraints(mpc,N,X,U,x_ref,u_ref);
 
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
