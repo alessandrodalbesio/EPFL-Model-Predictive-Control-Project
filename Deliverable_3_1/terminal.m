@@ -10,6 +10,7 @@ function [Ff,ff,Qf] = terminal(mpc)
     Qf = sys.LQRPenalty.weight;
     Ff = Xf.A;
     ff = Xf.b;
+    
     figure;
     if Xf.Dim > 2
         for i=1:Xf.Dim-1
