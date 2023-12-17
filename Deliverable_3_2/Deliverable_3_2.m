@@ -7,7 +7,7 @@ addpath(fullfile('..', 'src')); % Add the path with all the informations about t
 H = 8; % Horizon length [second]
 Ts = 1/20; % Sample time
 Tf = 20; % Close-loop simulation time [second]
-closedLoop = true; % Set tu true if we want to study the close-loop evolution otherwise set it to false
+closedLoop = false; % Set tu true if we want to study the close-loop evolution otherwise set it to false
 
 % Define starting points
 x0 = [0;0;0;0]; % omega_y, beta, v_x, x

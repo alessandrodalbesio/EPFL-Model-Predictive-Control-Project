@@ -4,10 +4,10 @@ classdef MpcControl_z < MpcControlBase
         L                   % Estimator gain for disturbance rejection
             
         % Define the cost parameters
-        Q = eye(2);
-        R = 0.1;
+        Q = diag([25,750]);
+        R = 0.01;
 
-        % Define the constraints
+        % Define the constraints matrices
         F = nan;
         f = nan;
         M = [-1;1];
