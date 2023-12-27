@@ -37,7 +37,7 @@ classdef MpcControl_y < MpcControlBase
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
 
             H=[0 1 0 0;0 -1 0 0];
-            h=[0.1222;0.1222];
+            h=[0.1745;0.1745];
             %input constraints
             Hu=[1;-1];
             hu=[0.26;0.26];
