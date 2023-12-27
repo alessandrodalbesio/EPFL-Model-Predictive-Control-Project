@@ -4,10 +4,10 @@ import gurobi.*;
 clc; clear; close all;
 
 % General settings
-H = 10; % Horizon length [second]
+H = 8; % Horizon length [second]
 Ts = 1/20; % Sample time
 Tf = 30; % Simulation time
-simAnimationTime = 10;
+simAnimationTime = 20;
 closedLoop = true;
 x0 = zeros(12,1); %vector intial condition
 

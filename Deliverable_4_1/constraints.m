@@ -1,7 +1,6 @@
 function [con,obj] = constraints(mpc,N,X,U,xref,uref)
     % Parameters definition
     useSlacks = 1;
-    pnorm = 1;
     stateConstraints = ~all(all(isnan(mpc.F))) && ~all(isnan(mpc.f));
     
     % Define the slack variables
@@ -11,7 +10,6 @@ function [con,obj] = constraints(mpc,N,X,U,xref,uref)
     % Define constraints and objectives
     con = [];
     obj = 0;
-
 
     % Set the constraints for t=1...N-1
     for i=1:N-1
@@ -25,7 +23,7 @@ function [con,obj] = constraints(mpc,N,X,U,xref,uref)
         end
         con = [con,mpc.M*(U(:,i)-uref) <= mpc.m-mpc.M*uref];
         if useSlacks
-            obj = obj + (X(:,i)-xref)'*mpc.Q*(X(:,i)-xref) + (U(:,i)-uref)'*mpc.R*(U(:,i)-uref) + eps(:,i)'*mpc.S*eps(:,i) + mpc.s*norm(eps(:,i),pnorm);
+            obj = obj + (X(:,i)-xref)'*mpc.Q*(X(:,i)-xref) + (U(:,i)-uref)'*mpc.R*(U(:,i)-uref) + eps(:,i)'*mpc.S*eps(:,i);
         else
             obj = obj + (X(:,i)-xref)'*mpc.Q*(X(:,i)-xref) + (U(:,i)-uref)'*mpc.R*(U(:,i)-uref);
         end
@@ -39,9 +37,10 @@ function [con,obj] = constraints(mpc,N,X,U,xref,uref)
             con = [con,mpc.F*(X(:,N)-xref) <= mpc.f-mpc.F*xref];
         end
     end
+    [~,Qf,~] = dlqr(mpc.A,mpc.B,mpc.Q,mpc.R);
     if useSlacks
-        obj = obj + (X(:,N)-xref)'*mpc.Q*(X(:,N)-xref) + eps(:,N)'*mpc.S*eps(:,N) + mpc.s*norm(eps(:,N),pnorm);
+        obj = obj + (X(:,N)-xref)'*Qf*(X(:,N)-xref) + eps(:,N)'*mpc.S*eps(:,N);
     else
-        obj = obj + (X(:,N)-xref)'*mpc.Q*(X(:,N)-xref);
+        obj = obj + (X(:,N)-xref)'*Qf*(X(:,N)-xref);
     end
 end
