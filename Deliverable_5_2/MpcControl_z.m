@@ -5,7 +5,7 @@ classdef MpcControl_z < MpcControlBase
             
         % Define the cost parameters
         Q = diag([1,1]);
-        R = 0.1;
+        R = 1;
 
         % Define the constraints
         F = nan;
@@ -63,9 +63,9 @@ classdef MpcControl_z < MpcControlBase
             
             % Set the constraints for t=1...N-1
             for i=1:N-1
-                con = [con, (X(:,i+1)-x_ref) == mpc.A * (X(:,i)-x_ref) + mpc.B * (U(:,i)-u_ref)];
-                con = [con,mpc.M*(U(:,i)-u_ref) <= mpc.m-mpc.M*u_ref];
-                obj = obj + (X(:,i)-x_ref)'*mpc.Q*(X(:,i)-x_ref) + (U(:,i)-u_ref)'*mpc.R*(U(:,i)-u_ref);
+                con = [con, X(:,i+1) == mpc.A * X(:,i) + mpc.B * U(:,i)];
+                con = [con,mpc.M*U(:,i) <= mpc.m];
+                obj = obj + (X(:,i)-x_ref)'*mpc.Q*(X(:,i)-x_ref) + U(:,i)'*mpc.R*U(:,i);
             end
             
             % Set the constraints for t=N
@@ -113,7 +113,7 @@ classdef MpcControl_z < MpcControlBase
             % Define constraints and cost function
             obj = us'*Rs*us;
             con = [eye(size(mpc.A)) - mpc.A, -mpc.B ; mpc.C, 0]*[xs; us] == [mpc.B*d_est;ref];
-            con = [con, mpc.M*us <= mpc.m];
+            % con = [con, mpc.M*us <= mpc.m];
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -138,7 +138,7 @@ classdef MpcControl_z < MpcControlBase
             A_bar = [mpc.A mpc.B; 0 0 1];
             B_bar = [mpc.B; 0];
             C_bar = [mpc.C 0];
-            E = [0.1,0.2,0.3];
+            E = [0.3,0.35,0.4];
             L = -place(A_bar', C_bar', E)';
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE

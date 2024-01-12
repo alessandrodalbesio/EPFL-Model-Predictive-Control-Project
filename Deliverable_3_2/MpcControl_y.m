@@ -1,8 +1,8 @@
 classdef MpcControl_y < MpcControlBase
     properties
         % Define the cost parameters
-        Q = diag([1,1,100,750]);
-        R = 0.01;
+        Q = 10*eye(4);
+        R = 0.1;
 
         % Define the constraints matrices
         F = [0,1,0,0;0,-1,0,0];

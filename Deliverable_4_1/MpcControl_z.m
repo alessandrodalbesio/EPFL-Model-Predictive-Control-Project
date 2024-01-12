@@ -4,7 +4,9 @@ classdef MpcControl_z < MpcControlBase
         L                   % Estimator gain for disturbance rejection
             
         % Define the cost parameters
-        Q = diag([125,1500]);
+        %Q = diag([125,1500]);
+        %R = 0.01;
+        Q = diag([25,250]);
         R = 0.01;
         
         % Define the constraints

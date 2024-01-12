@@ -138,7 +138,7 @@ classdef MpcControl_z < MpcControlBase
             A_bar = [mpc.A mpc.B; 0 0 1];
             B_bar = [mpc.B; 0];
             C_bar = [mpc.C 0];
-            E = [0.1,0.2,0.3];
+            E = [0.3,0.35,0.4];
             L = -place(A_bar', C_bar', E)';
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE

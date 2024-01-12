@@ -25,13 +25,13 @@ mpc_roll = MpcControl_roll(sys_roll, Ts, H); % Controller for roll state
 mpc = rocket.merge_lin_controllers(xs, us, mpc_x, mpc_y, mpc_z, mpc_roll);
 
 if closedLoop
-    ref = @(t_, x_) ref_TVC(t_); %ref is a trajectory
+    ref = @(t_, x_) ref_TVC(t_,deg2rad(50)); %ref is a trajectory
     [T, X, U, Ref] = rocket.simulate(x0, Tf, @mpc.get_u, ref);
     rocket.anim_rate = simAnimationTime; % Increase this to make the animation faster
     ph = rocket.plotvis(T, X, U, Ref);
     ph.fig.Name = 'Merged lin. MPC in nonlinear simulation'; % Set a figure title
 else
-    ref = [2 2 2 deg2rad(40)]'; %when the ref is a point
+    ref = [2 2 2 deg2rad(50)]'; %when the ref is a point
     [u, T_opt, X_opt, U_opt] = mpc.get_u(x0, ref);
     U_opt(:,end+1) = nan;
     ph = rocket.plotvis(T_opt, X_opt, U_opt, ref); % Plot as usual

@@ -1,7 +1,7 @@
 classdef MpcControl_roll < MpcControlBase
     properties
         % Define the cost parameters
-        Q = diag([1,1]);
+        Q = diag([500,1500]);
         R = 0.1;
         
         % Define the constraints

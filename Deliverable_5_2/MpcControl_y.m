@@ -1,10 +1,8 @@
 classdef MpcControl_y < MpcControlBase
     properties
         % Define the cost parameters
-        Q = diag([1,1,1,1]);
-        R = 0.1;
-        S = diag([1,1]);
-        s = 1;
+        Q = diag([250,10,50,300]);
+        R = 0.01;
 
         % Define the constraints
         F = [0,1,0,0;0,-1,0,0];

@@ -25,8 +25,8 @@ classdef NmpcControl < handle
     methods
         function obj = NmpcControl(rocket, tf, expected_delay)
             
-            if nargin < 4, expected_delay = 0; end
-           
+            if nargin < 3, expected_delay = 0; end
+            
             import casadi.*
             
             N_segs = ceil(tf/rocket.Ts); % MPC horizon
@@ -52,26 +52,25 @@ classdef NmpcControl < handle
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
 
             % Cost matrices
-
             Q = diag([ ...
-                150,150,50, ... % wx, wy, wz
-                75,75,300, ... % alpha, beta, gamma
-                25,25,75, ... % vx, vy, vz
-                500,500,500 ... % x, y, z
+                125,125,25, ... % wx, wy, wz
+                75,75,250, ... % alpha, beta, gamma
+                25,10,75, ... % vx, vy, vz
+                500,750,500 ... % x, y, z
             ]);
             R = diag([ ...
-                100, ... % Delta 1
-                100, ... % Delta 2
+                10, ... % Delta 1
+                10, ... % Delta 2
                 0.001, ... % Pavg
                 0.01 ... % Pdiff
             ]);
-            
+
             % Define state constraints
             ubx(5) = deg2rad(75);
             lbx(5) = deg2rad(-75);
             ubu(1:4) = [0.26;0.26;80;20];
             lbu(1:4) = [-0.26;-0.26;50;-20];
-            
+
             % Discretize the continuous time system
             DT = rocket.Ts;
             X0 = MX.sym('X0',nx);
@@ -104,7 +103,6 @@ classdef NmpcControl < handle
             end
 
             cost = cost + (X_sym(:,N)-xref)'*Qf*(X_sym(:,N)-xref);
-            
 
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -150,7 +148,7 @@ classdef NmpcControl < handle
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
 
-            u_init = zeros(4, 1); % Replace this by a better initialization
+            u_init = us; % Replace this by a better initialization
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -162,12 +160,13 @@ classdef NmpcControl < handle
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             delay = obj.expected_delay;
-            mem_u = obj.mem_u;
-            
+
             % Delay compensation: Predict x0 delay timesteps later.
             % Simulate x_ for 'delay' timesteps
             x_ = x0;
-            % ...
+            for i=1:delay
+                x_ = x_ + obj.rocket.Ts * obj.rocket.f(x_,obj.mem_u(:,i));
+            end
        
             x0 = x_;
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
@@ -185,7 +184,7 @@ classdef NmpcControl < handle
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             % Delay compensation: Save current u
             if obj.expected_delay > 0
-               % obj.mem_u = ...
+               obj.mem_u = [obj.mem_u(:,2:end),u];
             end
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -205,7 +204,7 @@ classdef NmpcControl < handle
             % %
             % % stats = obj.solver.stats;
         end
-        
+
         function solve(obj, x0, ref)
             
             % ---- Set the initial state and reference ----

@@ -4,9 +4,9 @@ clc; close all; clear;
 addpath(fullfile('..', 'src'));
 
 % Parameter choice
-H = 5; % Horizon length [seconds]
+H = 8; % Horizon length [seconds]
 Ts = 1/20; % Sample time [seconds]
-Tf = 10; % Close-loop simulation time [seconds]
+Tf = 18; % Close-loop simulation time [seconds]
 OFFSET_FREE_TRACKING = true;
 
 % Starting point

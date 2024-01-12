@@ -1,17 +1,14 @@
 classdef MpcControl_x < MpcControlBase
     properties
         % Define the cost parameters
-        Q = diag([250,125,50,175])
-        R = 0.01;
-        S = 1000;
-        %Q = diag([250,125,50,175]);
-        %R = 0.1;
-
+        %Q = diag([400,10,25,275])
+        %R = 100;
+        Q = diag([300,50,25,150]);
+        R = 100;
+        
         % Define the constraints
         F = [0,1,0,0;0,-1,0,0];
         f = [0.1745;0.1745];
-        %F = nan;
-        %f = nan;
         M = [1;-1];
         m = [0.26;0.26];
         Xmax = [Inf,0.1745,Inf,Inf];

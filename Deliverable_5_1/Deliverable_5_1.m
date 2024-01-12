@@ -6,8 +6,8 @@ addpath(fullfile('..', 'src'));
 % Parameter choice
 H = 8; % Horizon length [seconds]
 Ts = 1/20; % Sample time [seconds]
-Tf = 10; % Close-loop simulation time [seconds]
-OFFSET_FREE_TRACKING = true;
+Tf = 8; % Close-loop simulation time [seconds]
+OFFSET_FREE_TRACKING = false;
 
 % Starting point
 x0 = [zeros(1,9),1,0,3]';
@@ -25,7 +25,7 @@ mpc_y = MpcControl_y(sys_y, Ts, H); % Controller for y state
 mpc_z = MpcControl_z(sys_z, Ts, H); % Controller for z state
 mpc_roll = MpcControl_roll(sys_roll, Ts, H); % Controller for roll state
 mpc = rocket.merge_lin_controllers(xs, us, mpc_x, mpc_y, mpc_z, mpc_roll); % Merged controller
-ref = @(t_, x_) ref_TVC(t_);
+ref = [1.2,0,3,0]';
 rocket.mass = 2.13;
 if OFFSET_FREE_TRACKING == true; [T, X, U, Ref, Z_hat] = rocket.simulate_est_z(x0,Tf,@mpc.get_u,ref, mpc_z, sys_z); end
 if OFFSET_FREE_TRACKING == false; [T, X, U, Ref] = rocket.simulate(x0, Tf, @mpc.get_u, ref); end
@@ -40,6 +40,6 @@ if OFFSET_FREE_TRACKING == true
 end
 
 %% Rocket evolution
-rocket.anim_rate = 1;
+rocket.anim_rate = 10;
 ph = rocket.plotvis(T,X,U,Ref);
 ph.fig.Name = 'Offset-free tracking';
