@@ -2,15 +2,12 @@ classdef MpcControl_z < MpcControlBase
     properties
         A_bar, B_bar, C_bar % Augmented system for disturbance rejection
         L                   % Estimator gain for disturbance rejection
-        
-        % Define the title for the plots
-        title_plots="Z controller";
-
+            
         % Define the cost parameters
-        Q = 10*eye(2);
-        R = 0.1;
+        Q = diag([1,1]);
+        R = 1;
 
-        % Define the constraints matrices
+        % Define the constraints
         F = nan;
         f = nan;
         M = [-1;1];
@@ -59,8 +56,9 @@ classdef MpcControl_z < MpcControlBase
             
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
-            
-            [con,obj] = constraints(mpc,X,U,N);
+                                        
+            % Set the constraints and the objective
+            [con,obj] = constraints(mpc,N,X,U,x_ref,u_ref);
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -97,9 +95,14 @@ classdef MpcControl_z < MpcControlBase
             
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
-            % You can use the matrices mpc.A, mpc.B, mpc.C and mpc.D
-            obj = 0;
-            con = [xs == 0, us == 0];
+
+            % Initialize parameters
+            Rs = 1;
+            
+            % Define constraints and cost function
+            obj = us'*Rs*us;
+            con = [eye(size(mpc.A)) - mpc.A, -mpc.B ; mpc.C, 0]*[xs; us] == [mpc.B*d_est;ref];
+            % con = [con, mpc.M*us <= mpc.m];
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -121,10 +124,11 @@ classdef MpcControl_z < MpcControlBase
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             % You can use the matrices mpc.A, mpc.B, mpc.C and mpc.D
             
-            A_bar = [];
-            B_bar = [];
-            C_bar = [];
-            L = [];
+            A_bar = [mpc.A mpc.B; 0 0 1];
+            B_bar = [mpc.B; 0];
+            C_bar = [mpc.C 0];
+            E = [0.3,0.35,0.4];
+            L = -place(A_bar', C_bar', E)';
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

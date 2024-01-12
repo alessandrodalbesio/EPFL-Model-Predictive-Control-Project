@@ -1,13 +1,13 @@
-%% Problem configuration
+%% Problem definition
+addpath(fullfile('..', 'src')); % Add the path with all the informations about the rocket 
 import gurobi.*;
-clc; close all; clear;
-addpath(fullfile('..', 'src'));
+clc; clear; close all;
 
 % General settings
-H = 10; % Horizon length [second]
+H = 8; % Horizon length [second]
 Ts = 1/20; % Sample time
 Tf = 30; % Simulation time
-simAnimationTime = 10;
+simAnimationTime = 20;
 closedLoop = true;
 x0 = zeros(12,1); %vector intial condition
 
@@ -31,7 +31,7 @@ if closedLoop
     ph = rocket.plotvis(T, X, U, Ref);
     ph.fig.Name = 'Merged lin. MPC in nonlinear simulation'; % Set a figure title
 else
-    ref = [2 2 2 deg2rad(40)]'; %when the ref is a point
+    ref = [2 2 2 deg2rad(50)]'; %when the ref is a point
     [u, T_opt, X_opt, U_opt] = mpc.get_u(x0, ref);
     U_opt(:,end+1) = nan;
     ph = rocket.plotvis(T_opt, X_opt, U_opt, ref); % Plot as usual

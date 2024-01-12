@@ -1,7 +1,7 @@
 classdef MpcControl_x < MpcControlBase
     properties
         % Define the cost parameters
-        Q = eye(4);
+        Q = 10*eye(4);
         R = 0.1;
 
         % Define the constraints matrices

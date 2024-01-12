@@ -2,10 +2,10 @@ classdef MpcControl_roll < MpcControlBase
     properties
 
         % Define the cost parameters
-        Q = eye(2);
+        Q = 10*eye(2);
         R = 0.1;
-
-        % Define the constraints
+        
+        % Define the constraints matrices
         F = nan;
         f = nan;
         M = [1;-1];

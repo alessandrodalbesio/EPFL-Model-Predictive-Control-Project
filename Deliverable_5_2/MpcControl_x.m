@@ -1,10 +1,10 @@
-classdef MpcControl_y < MpcControlBase
+classdef MpcControl_x < MpcControlBase
     properties
         % Define the cost parameters
-        Q = 10*eye(4);
-        R = 0.1;
+        Q = diag([250,10,50,300]);
+        R = 0.01;
 
-        % Define the constraints matrices
+        % Define the constraints
         F = [0,1,0,0;0,-1,0,0];
         f = [0.1745;0.1745];
         M = [1;-1];
@@ -39,12 +39,13 @@ classdef MpcControl_y < MpcControlBase
             % Predicted state and input trajectories
             X = sdpvar(nx, N);
             U = sdpvar(nu, N-1);
-            
+
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
-                        
-            [con,obj] = constraints(mpc,N,X,U,x_ref,u_ref);
 
+            % Set the constraints and the objective
+            [con,obj] = constraints(mpc,N,X,U,x_ref,u_ref);
+            
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
@@ -75,7 +76,7 @@ classdef MpcControl_y < MpcControlBase
             
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE
-
+            
             [obj,con] = ss_constraints(mpc,xs,us,ref);
             
             % YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE YOUR CODE HERE

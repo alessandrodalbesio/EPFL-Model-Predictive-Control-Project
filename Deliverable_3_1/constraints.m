@@ -1,12 +1,14 @@
 function [con,obj] = constraints(mpc,X,U,N)   
+    stateConstraints = ~all(all(isnan(mpc.F))) && ~all(all(isnan(mpc.f)));
     con = [];
     obj = 0;
+    
     % Iterate
     for i=1:N-1
-        con = [con,X(:,i+1) == mpc.A * X(:,i) + mpc.B * U(:,i)];
-        if ~all(all(isnan(mpc.F))) && ~all(all(isnan(mpc.f))); con = [con,mpc.F*X(:,i) <= mpc.f]; end
-        if ~all(isnan(mpc.M)) && ~all(isnan(mpc.m)); con = [con,mpc.M*U(:,i) <= mpc.m]; end
-        obj = obj + X(:,i)'*mpc.Q*X(:,i) + U(:,i)'*mpc.R*U(:,i);
+        con = [con,X(:,i+1) == mpc.A * X(:,i) + mpc.B * U(:,i)]; % Dynamic constraints
+        if stateConstraints; con = [con,mpc.F*X(:,i) <= mpc.f]; end % State constraints
+        con = [con,mpc.M*U(:,i) <= mpc.m]; % Input constraints
+        obj = obj + X(:,i)'*mpc.Q*X(:,i) + U(:,i)'*mpc.R*U(:,i); % Cost computation
     end
 
     % Terminal constraints

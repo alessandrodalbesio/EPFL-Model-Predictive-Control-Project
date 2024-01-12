@@ -10,10 +10,11 @@ function [Ff,ff,Qf] = terminal(mpc)
     Qf = sys.LQRPenalty.weight;
     Ff = Xf.A;
     ff = Xf.b;
+
     figure;
     if Xf.Dim > 2
         for i=1:Xf.Dim-1
-            subplot(ceil((Xf.Dim-1) / 2),2,i)
+            subplot(1,Xf.Dim-1,i)
             Xf.projection(i:i+1).plot();
             grid off;
             title("Terminal set "+mpc.title_plots+" dimensions " + string(i) + " - " + string(i+1));
