@@ -1,8 +1,8 @@
 # MPC
 
 ## Course information
-* Lecturer: [Jean-Philippe Thiran][jpt]
-* [EE-451 coursebook][coursebook]
+* Lecturer: [Jones Colin Neil][jpt]
+* [ME-425 coursebook][coursebook]
 
 [jpt]: https://people.epfl.ch/207237
 [coursebook]: https://edu.epfl.ch/coursebook/en/model-predictive-control-ME-425
